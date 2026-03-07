@@ -4,6 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>blame.sh — Developer Excuse Generator</title>
+  <!-- Favicon & Icons -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  <meta name="theme-color" content="#0D1117">
+  <!-- Open Graph -->
+  <meta property="og:title" content="blame.sh">
+  <meta property="og:description" content="Pick who's asking. Pick what broke. Get your excuse.">
+  <meta property="og:image" content="logo.png">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="blame.sh">
+  <meta name="twitter:description" content="Pick who's asking. Pick what broke. Get your excuse.">
+  <meta name="twitter:image" content="logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -47,6 +63,15 @@
       font-size: 2.5rem;
       font-weight: 700;
       color: var(--green);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .header-logo {
+      height: 3rem;
+      border-radius: 6px;
+      image-rendering: pixelated;
     }
 
     header h1 span {
@@ -244,9 +269,14 @@
       color: var(--text);
     }
 
-    .result-card .copy-btn {
+    .card-actions {
+      display: flex;
+      gap: 0.5rem;
       align-self: flex-end;
       margin-top: 1rem;
+    }
+
+    .card-btn {
       background: transparent;
       border: 1px solid var(--border);
       color: var(--text-muted);
@@ -258,12 +288,12 @@
       transition: all 0.2s;
     }
 
-    .result-card .copy-btn:hover {
+    .card-btn:hover {
       border-color: var(--text-muted);
       color: var(--text);
     }
 
-    .result-card .copy-btn.copied {
+    .card-btn.copied {
       border-color: var(--green);
       color: var(--green);
     }
@@ -303,20 +333,15 @@
       font-size: 0.7rem;
     }
 
-    footer a {
-      color: var(--text-muted);
-      text-decoration: none;
-    }
-
-    footer a:hover {
-      color: var(--text);
+    footer .prompt-symbol {
+      color: var(--green);
     }
   </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <h1>blame<span>.sh</span></h1>
+      <h1><img src="logo.png" alt="blame.sh" class="header-logo">blame<span>.sh</span></h1>
       <p id="subtitle">Gerador de desculpas para devs</p>
       <div class="lang-toggle">
         <button class="lang-btn active" data-lang="pt">PT</button>
@@ -353,7 +378,7 @@
   </div>
 
   <footer>
-    <p>blame.sh &mdash; <span id="footer-text">porque a culpa nunca é do dev</span></p>
+    <p><span class="prompt-symbol">$ </span>echo "built with caffeine and plausible deniability"</p>
   </footer>
 
   <script>
@@ -366,7 +391,8 @@
         reset: 'reset',
         copy: 'copiar',
         copied: 'copiado!',
-        footer: 'porque a culpa nunca é do dev',
+        share: 'compartilhar',
+        shared: 'copiado!',
         tones: { tecnica: 'Técnica', vaga: 'Vaga', dramatica: 'Dramática' }
       },
       en: {
@@ -377,7 +403,8 @@
         reset: 'reset',
         copy: 'copy',
         copied: 'copied!',
-        footer: 'because it\'s never the dev\'s fault',
+        share: 'share',
+        shared: 'copied!',
         tones: { tecnica: 'Technical', vaga: 'Vague', dramatica: 'Dramatic' }
       }
     };
@@ -422,7 +449,6 @@
       document.getElementById('label-situation').textContent = t.labelSituation;
       document.getElementById('generate-btn').textContent = t.generate;
       document.getElementById('reset-btn').textContent = t.reset;
-      document.getElementById('footer-text').textContent = t.footer;
     }
 
     function renderPersonas() {
@@ -500,7 +526,10 @@
         card.innerHTML = `
           <div class="tone-label">${t.tones[tone]}</div>
           <div class="excuse-text"></div>
-          <button class="copy-btn">${t.copy}</button>
+          <div class="card-actions">
+            <button class="card-btn share-btn">${t.share}</button>
+            <button class="card-btn copy-btn">${t.copy}</button>
+          </div>
         `;
         container.appendChild(card);
 
@@ -513,6 +542,17 @@
           this.classList.add('copied');
           setTimeout(() => {
             this.textContent = t.copy;
+            this.classList.remove('copied');
+          }, 1500);
+        });
+
+        card.querySelector('.share-btn').addEventListener('click', function() {
+          const shareText = `I used blame.sh to explain why ${state.situation} to ${state.persona}. It worked. blame.sh`;
+          navigator.clipboard.writeText(shareText);
+          this.textContent = t.shared;
+          this.classList.add('copied');
+          setTimeout(() => {
+            this.textContent = t.share;
             this.classList.remove('copied');
           }, 1500);
         });
