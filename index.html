@@ -127,6 +127,22 @@
     .terminal-prompt-inner {
       max-width: 960px;
       margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .prompt-line {
+      flex: 1;
+      min-width: 0;
+    }
+
+    @media (max-width: 640px) {
+      .terminal-prompt-inner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+      }
     }
 
     .terminal-prompt .prompt-symbol {
@@ -210,22 +226,19 @@
     }
 
     /* Generate button */
-    .generate-wrap {
-      text-align: center;
-      margin: 2rem 0;
-    }
-
     .generate-btn {
       background: var(--green);
       border: none;
       color: var(--bg);
       font-family: inherit;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       font-weight: 700;
-      padding: 0.75rem 2rem;
-      border-radius: 8px;
+      padding: 0.5rem 1.25rem;
+      border-radius: 6px;
       cursor: pointer;
       transition: opacity 0.2s;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
 
     .generate-btn:hover {
@@ -362,10 +375,13 @@
 
   <div class="terminal-prompt">
     <div class="terminal-prompt-inner">
-      <span class="prompt-symbol">$ </span>
-      <span class="cmd">blame</span>
-      <span id="prompt-args"></span>
-      <span class="cursor"></span>
+      <div class="prompt-line">
+        <span class="prompt-symbol">$ </span>
+        <span class="cmd">blame</span>
+        <span id="prompt-args"></span>
+        <span class="cursor"></span>
+      </div>
+      <button class="generate-btn hidden" id="generate-btn">$ ./blame.sh</button>
     </div>
   </div>
 
@@ -378,10 +394,6 @@
     <div class="step hidden" id="step-situation">
       <div class="step-label"><span>#2</span> <span id="label-situation">O que aconteceu?</span></div>
       <div class="chips" id="situation-chips"></div>
-    </div>
-
-    <div class="generate-wrap hidden" id="generate-wrap">
-      <button class="generate-btn" id="generate-btn">$ ./blame.sh</button>
     </div>
 
     <div class="results hidden" id="results"></div>
@@ -445,7 +457,7 @@
           updateLabels();
           renderPersonas();
           hideElement('step-situation');
-          hideElement('generate-wrap');
+          hideElement('generate-btn');
           hideElement('results');
           hideElement('reset-wrap');
           updatePrompt();
@@ -486,7 +498,7 @@
       });
       renderSituations();
       showElement('step-situation');
-      hideElement('generate-wrap');
+      hideElement('generate-btn');
       hideElement('results');
       hideElement('reset-wrap');
       updatePrompt();
@@ -510,7 +522,7 @@
       document.querySelectorAll('#situation-chips .chip').forEach(c => {
         c.classList.toggle('selected', c.textContent === situation);
       });
-      showElement('generate-wrap');
+      showElement('generate-btn');
       hideElement('results');
       hideElement('reset-wrap');
       updatePrompt();
@@ -591,7 +603,7 @@
       state.situation = null;
       document.querySelectorAll('#persona-chips .chip').forEach(c => c.classList.remove('selected'));
       hideElement('step-situation');
-      hideElement('generate-wrap');
+      hideElement('generate-btn');
       hideElement('results');
       hideElement('reset-wrap');
       updatePrompt();
