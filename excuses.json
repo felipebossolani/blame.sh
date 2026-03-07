@@ -1,0 +1,876 @@
+{
+  "excuses": {
+    "pt": {
+      "PM/PO": {
+        "Subiu em prod e quebrou outra coisa": {
+          "tecnica": "A alteração introduziu um efeito colateral em um módulo com acoplamento implícito não documentado. O escopo do impacto só ficou visível após o deploy porque o ambiente de staging não replica o volume transacional de produção.",
+          "vaga": "Estamos avaliando o impacto sistêmico da entrega. Algumas dependências não previstas no planejamento original precisam ser endereçadas antes de confirmarmos a estabilidade.",
+          "dramatica": "Fizemos tudo certo. O ambiente é que decidiu trair a equipe exatamente no momento em que mais precisávamos dele."
+        },
+        "CI/CD falhou": {
+          "tecnica": "O pipeline falhou em um step de validação de contrato entre serviços. A causa raiz é uma divergência de versão entre o runner do CI e a imagem de produção que não estava mapeada no nosso matrix de compatibilidade.",
+          "vaga": "O processo de entrega contínua identificou uma inconsistência que precisa ser resolvida antes de prosseguirmos. Estamos trabalhando para normalizar o fluxo.",
+          "dramatica": "O CI não falhou. Ele nos salvou de um desastre ainda maior. Deveríamos estar agradecidos."
+        },
+        "Bug antigo voltou": {
+          "tecnica": "O comportamento foi reintroduzido porque o fix original estava acoplado a uma feature flag que foi desativada durante a última campanha de limpeza de configurações. Não havia teste cobrindo esse caminho.",
+          "vaga": "Uma situação que havia sido tratada anteriormente voltou à tona devido a mudanças no contexto operacional. Estamos revisando o histórico para garantir uma solução definitiva.",
+          "dramatica": "Ele nunca foi embora de verdade. Apenas esperava o momento certo para voltar."
+        },
+        "Estimativa estourou": {
+          "tecnica": "A estimativa original não contemplava o tempo de descoberta de dependências ocultas na camada de integração. O esforço real incluiu engenharia reversa de um módulo sem documentação.",
+          "vaga": "O escopo apresentou complexidades adicionais durante a execução que não eram visíveis na fase de planejamento. Estamos ajustando nossa metodologia de estimativa.",
+          "dramatica": "Estimamos com as informações que tínhamos. O sistema decidiu revelar sua verdadeira natureza só depois que começamos."
+        },
+        "Feature atrasou": {
+          "tecnica": "A feature tem dependência de uma API de terceiros que mudou o contrato sem aviso prévio. Precisamos de tempo adicional para adaptar a camada de integração e garantir compatibilidade.",
+          "vaga": "Identificamos pontos de atenção durante o desenvolvimento que exigem alinhamento antes da entrega. Queremos garantir que chegue com qualidade.",
+          "dramatica": "A feature está pronta no que depende de nós. O universo tem outras opiniões."
+        },
+        "Ambiente caiu": {
+          "tecnica": "O ambiente sofreu um OOM kill em um dos pods devido a um memory leak em um serviço auxiliar que não estava no escopo do nosso monitoramento ativo. O restart automático falhou por um misconfiguration no health check.",
+          "vaga": "Estamos enfrentando uma instabilidade de infraestrutura que está sendo tratada com prioridade pela equipe responsável. Assim que normalizar, retomamos.",
+          "dramatica": "O ambiente caiu. Não porque falhamos — mas porque estava carregando mais do que qualquer sistema deveria suportar."
+        },
+        "PR parado há dias": {
+          "tecnica": "O PR está aguardando review de um módulo crítico que exige aprovação de alguém com contexto profundo na área de segurança. Não queremos mergear sem a validação adequada.",
+          "vaga": "Estamos garantindo que o processo de revisão seja feito com o rigor necessário. Algumas entregas precisam de mais atenção antes de avançar.",
+          "dramatica": "O PR não está parado. Está amadurecendo. Código bom não se apressa."
+        },
+        "Test coverage caiu": {
+          "tecnica": "A cobertura caiu porque adicionamos novos branches de código em módulos de integração que, por natureza, são difíceis de testar unitariamente sem mocks complexos que introduziriam falsos positivos.",
+          "vaga": "Houve um ajuste temporário na cobertura durante uma entrega de maior complexidade. Temos um plano para restaurar o índice nas próximas sprints.",
+          "dramatica": "A cobertura caiu porque estávamos construindo. Às vezes você precisa quebrar o chão antes de pavimentar."
+        },
+        "Deploy na sexta às 17h": {
+          "tecnica": "O deploy foi necessário para corrigir uma regressão crítica identificada em produção. Seguimos o runbook de emergência e temos rollback disponível caso necessário.",
+          "vaga": "A entrega foi planejada considerando a urgência do contexto. Estamos monitorando de perto para garantir estabilidade.",
+          "dramatica": "Sexta às 17h é só um horário. Bugs não respeitam calendário."
+        },
+        "Rollback falhou também": {
+          "tecnica": "O rollback falhou porque o schema do banco já havia sido migrado e a versão anterior não é compatível com o estado atual dos dados. Estamos executando um forward fix para restaurar a consistência.",
+          "vaga": "O processo de reversão encontrou algumas restrições técnicas que estamos endereçando. A solução está sendo construída com cuidado para evitar impactos adicionais.",
+          "dramatica": "Quando o plano B falha, você descobre quem realmente é. Estamos descobrindo agora."
+        },
+        "Dados duplicados em prod": {
+          "tecnica": "A duplicação ocorreu por uma race condition em um processo de ingestão que não tinha idempotência garantida. O problema foi amplificado por um retry automático que disparou antes da constraint de unicidade ser aplicada.",
+          "vaga": "Identificamos uma inconsistência nos dados que está sendo investigada e corrigida. Estamos mapeando o impacto para garantir integridade total.",
+          "dramatica": "Os dados se duplicaram. Como se o sistema quisesse ter certeza de que não íamos perder nada importante."
+        },
+        "Alguém deletou o banco": {
+          "tecnica": "Houve uma execução indevida de um comando destrutivo em ambiente de produção. Estamos iniciando o processo de restore a partir do último snapshot válido e avaliando o RPO.",
+          "vaga": "Estamos lidando com uma situação crítica de dados e mobilizando todos os recursos disponíveis para a recuperação. Atualizaremos assim que tivermos um panorama claro.",
+          "dramatica": "O banco foi deletado. Respira. Temos backup. Provavelmente."
+        }
+      },
+      "CTO/Manager": {
+        "Subiu em prod e quebrou outra coisa": {
+          "tecnica": "O blast radius da mudança não foi completamente mapeado no design review. Havia um contrato implícito entre dois serviços que não estava documentado no diagrama de dependências atualizado.",
+          "vaga": "A entrega gerou um impacto não previsto que estamos endereçando. Vou garantir que o processo de validação seja revisado para evitar recorrência.",
+          "dramatica": "Subimos. Algo quebrou. Estamos corrigindo. É exatamente pra isso que temos observabilidade."
+        },
+        "CI/CD falhou": {
+          "tecnica": "Temos um flaky test que está intermitentemente bloqueando o pipeline. A causa raiz é um teste de integração com dependência de timing que não é determinístico em ambientes com latência variável.",
+          "vaga": "O pipeline apresentou uma falha que está sendo investigada. Estamos avaliando se é um problema pontual ou estrutural antes de tomar uma decisão.",
+          "dramatica": "O CI falhou. Mas pelo menos o CI existe. Poderia ser pior."
+        },
+        "Bug antigo voltou": {
+          "tecnica": "O bug foi reintroduzido por uma mudança no comportamento padrão de uma dependência atualizada. O teste de regressão não cobria essa variação de comportamento na versão mais recente.",
+          "vaga": "Uma issue que havia sido resolvida anteriormente ressurgiu. Estamos investigando a causa para garantir que a correção seja definitiva dessa vez.",
+          "dramatica": "Esse bug tem mais vidas que gato. Dessa vez a gente enterra de vez."
+        },
+        "Estimativa estourou": {
+          "tecnica": "O estouro veio da descoberta tardia de uma dívida técnica na camada de dados que não estava visível na fase de refinamento. O custo de endereçá-la durante o desenvolvimento foi maior que o estimado.",
+          "vaga": "A complexidade real da tarefa superou a estimativa inicial. Estamos documentando os aprendizados para calibrar melhor nas próximas estimativas.",
+          "dramatica": "Estimamos o que víamos. O que não víamos era maior."
+        },
+        "Feature atrasou": {
+          "tecnica": "O atraso foi causado por uma mudança de requisito identificada durante o desenvolvimento que exigiu redesign parcial da solução. Priorizei corretude sobre velocidade.",
+          "vaga": "A entrega está levando mais tempo que o previsto devido a complexidades identificadas durante o desenvolvimento. Prefiro entregar certo do que rápido.",
+          "dramatica": "A feature vai chegar. Só não vai chegar errada."
+        },
+        "Ambiente caiu": {
+          "tecnica": "Tivemos um cascading failure iniciado por um serviço de baixa prioridade que consumiu recursos além do seu limit configurado. O circuit breaker não atuou porque o threshold estava mal calibrado.",
+          "vaga": "O ambiente teve uma instabilidade que está sendo investigada. Estamos revisando as configurações de resiliência para evitar recorrência.",
+          "dramatica": "O ambiente caiu. Documentamos tudo. Vai virar um postmortem exemplar."
+        },
+        "PR parado há dias": {
+          "tecnica": "O PR toca em uma área sensível do codebase que exige revisão cuidadosa. Prefiro que fique aberto alguns dias a mais do que mergear algo que vai gerar problema em produção.",
+          "vaga": "Estamos garantindo o processo de revisão adequado para uma mudança de maior criticidade. Qualidade não tem prazo.",
+          "dramatica": "PR parado é PR sendo respeitado. Merge rápido é onde os problemas nascem."
+        },
+        "Test coverage caiu": {
+          "tecnica": "A queda de cobertura é temporária e resultado direto de um aumento no código de integração que, por design, tem cobertura mais baixa que código de domínio. O índice vai se recuperar nas próximas entregas.",
+          "vaga": "Houve uma variação na cobertura que está sendo monitorada. Temos visibilidade sobre as áreas descobertas e um plano para endereçá-las.",
+          "dramatica": "Cobertura caiu. Código novo foi escrito. São coisas que acontecem juntas às vezes."
+        },
+        "Deploy na sexta às 17h": {
+          "tecnica": "Avaliei o risco e decidi que o custo de esperar até segunda era maior que o risco do deploy. Temos monitoramento ativo e equipe de plantão caso seja necessário intervir.",
+          "vaga": "A decisão de deploy foi tomada após análise de risco. Estamos com monitoramento reforçado para garantir estabilidade no final de semana.",
+          "dramatica": "Sexta às 17h com rollback preparado é melhor que segunda às 9h sem ele."
+        },
+        "Rollback falhou também": {
+          "tecnica": "O rollback encontrou uma incompatibilidade de schema que não foi mapeada no plano de reversão. Estamos executando um patch forward para restaurar o estado consistente sem perda de dados.",
+          "vaga": "O processo de reversão encontrou restrições técnicas. Estamos executando um plano alternativo de recuperação com total controle sobre os dados.",
+          "dramatica": "Rollback falhou. Significa que precisamos ser mais criativos. Já estamos."
+        },
+        "Dados duplicados em prod": {
+          "tecnica": "A duplicação é resultado de um processo sem garantia de idempotência que foi executado duas vezes em janelas sobrepostas. Estamos construindo um script de deduplicação com validação antes de executar.",
+          "vaga": "Identificamos inconsistência nos dados e estamos trabalhando na correção com cautela para não agravar a situação. Vou te atualizar com o plano de ação.",
+          "dramatica": "Dados duplicados. Poderia ser pior. Poderia ser dados deletados."
+        },
+        "Alguém deletou o banco": {
+          "tecnica": "Executamos um comando destrutivo em produção sem a proteção adequada. Estamos executando restore do último backup válido e revisando os controles de acesso para garantir que isso não se repita.",
+          "vaga": "Estamos lidando com uma situação crítica com total prioridade. O processo de recuperação foi iniciado e vou te manter informado a cada etapa.",
+          "dramatica": "O banco foi deletado. Já aconteceu com empresas maiores que a nossa. Estamos nos recuperando."
+        }
+      },
+      "CEO/Founder": {
+        "Subiu em prod e quebrou outra coisa": {
+          "tecnica": "Tivemos um impacto colateral em produção causado por acoplamento não mapeado entre sistemas. O time está corrigindo e reforçando os processos de validação para evitar recorrência.",
+          "vaga": "Passamos por uma instabilidade após uma entrega. Estamos corrigindo e usando o aprendizado para fortalecer nosso processo.",
+          "dramatica": "Isso acontece quando você cresce rápido. Estamos corrigindo e saindo mais fortes."
+        },
+        "CI/CD falhou": {
+          "tecnica": "Nossa pipeline de entrega contínua está com uma falha intermitente que está atrasando os deploys. Não é um problema de produto, é de infraestrutura de engenharia. Já temos pessoas nisto.",
+          "vaga": "Temos uma lentidão temporária no nosso processo de entrega. Não impacta o produto em produção, apenas a velocidade de novas entregas.",
+          "dramatica": "O pipeline quebrou. A boa notícia: temos pipeline. Isso já nos coloca à frente de muita empresa."
+        },
+        "Bug antigo voltou": {
+          "tecnica": "Um bug que havia sido corrigido foi reintroduzido por uma mudança indireta. Identificamos a causa, estamos corrigindo e adicionando cobertura de teste para garantir que não volte.",
+          "vaga": "Um problema que estava resolvido voltou à tona. Estamos corrigindo com prioridade e revisando o processo para evitar regressões.",
+          "dramatica": "O bug voltou. Mas nós também. E dessa vez estamos prontos."
+        },
+        "Estimativa estourou": {
+          "tecnica": "A complexidade técnica real foi maior que a estimada. Descobrimos dívida técnica durante a execução que precisou ser endereçada para garantir a qualidade da entrega.",
+          "vaga": "O prazo precisou ser ajustado por complexidades que surgiram durante o desenvolvimento. Preferimos entregar certo a entregar rápido.",
+          "dramatica": "Demorou mais. Mas vai chegar funcionando. É o que importa para o cliente."
+        },
+        "Feature atrasou": {
+          "tecnica": "A feature encontrou dependências técnicas que não estavam visíveis no refinamento inicial. Optamos por resolver adequadamente em vez de entregar com workarounds que gerariam problemas futuros.",
+          "vaga": "A entrega está levando mais tempo que o planejado. Estamos garantindo que chegue com a qualidade que o nosso produto exige.",
+          "dramatica": "O mercado vai esperar. Uma feature ruim lançada rápido faz mais mal que uma boa feature com atraso."
+        },
+        "Ambiente caiu": {
+          "tecnica": "Tivemos uma indisponibilidade causada por esgotamento de recursos em um componente da nossa infraestrutura. O sistema foi restaurado e estamos implementando salvaguardas para evitar recorrência.",
+          "vaga": "Passamos por um período de instabilidade que já foi resolvido. Estamos reforçando nossa infraestrutura para garantir maior disponibilidade.",
+          "dramatica": "Caiu. Voltou. Vai ficar de pé. Isso é o que sistemas resilientes fazem."
+        },
+        "PR parado há dias": {
+          "tecnica": "Temos mudanças em revisão que estão aguardando validação técnica adequada. Não é lentidão, é processo. Merge sem revisão adequada gera custo muito maior depois.",
+          "vaga": "Algumas entregas estão em processo de validação. Preferimos garantir qualidade antes de avançar.",
+          "dramatica": "Código parado em revisão é código sendo cuidado. O alternativo é código indo direto pra crise."
+        },
+        "Test coverage caiu": {
+          "tecnica": "A cobertura de testes teve uma queda temporária durante um período de alta adição de código novo. Temos um plano para recuperar o índice e garantimos que as áreas críticas estão cobertas.",
+          "vaga": "Houve uma variação nos nossos indicadores de qualidade que estamos endereçando. Nossas áreas de maior risco continuam protegidas.",
+          "dramatica": "Menos testes hoje significa mais velocidade amanhã se fizermos certo. Estamos fazendo certo."
+        },
+        "Deploy na sexta às 17h": {
+          "tecnica": "Fizemos um deploy em horário não convencional para resolver uma situação crítica. A decisão foi baseada em análise de risco e temos monitoramento ativo.",
+          "vaga": "Tomamos uma decisão de entrega fora do padrão habitual por necessidade. Estamos com atenção redobrada para garantir estabilidade.",
+          "dramatica": "Sexta às 17h porque o problema não podia esperar segunda. É isso que times comprometidos fazem."
+        },
+        "Rollback falhou também": {
+          "tecnica": "O processo de reversão encontrou restrições de compatibilidade de dados. Estamos executando um plano de recuperação alternativo com total rastreabilidade e sem risco adicional aos dados.",
+          "vaga": "Encontramos dificuldades no processo de reversão e estamos executando um plano B estruturado. Vou te manter informado a cada hora.",
+          "dramatica": "Plano A falhou. Plano B está em execução. Sempre temos um plano C. É assim que times preparados funcionam."
+        },
+        "Dados duplicados em prod": {
+          "tecnica": "Identificamos duplicações de dados causadas por uma falha de idempotência em processo de ingestão. Estamos construindo e validando o script de correção antes de executar para garantir integridade.",
+          "vaga": "Temos uma inconsistência nos dados que está sendo corrigida com cuidado. Nenhum dado foi perdido, apenas duplicado.",
+          "dramatica": "Dados duplicados são um problema que tem solução. Dados perdidos não. Estamos no melhor cenário possível aqui."
+        },
+        "Alguém deletou o banco": {
+          "tecnica": "Tivemos uma exclusão acidental de dados em produção. O processo de recuperação via backup foi iniciado imediatamente. Estamos avaliando o RPO e reforçando os controles de acesso.",
+          "vaga": "Estamos lidando com uma situação crítica de infraestrutura com toda prioridade. A recuperação está em andamento e vou te atualizar a cada 30 minutos.",
+          "dramatica": "O pior aconteceu. E temos backup. Essa é a história que vamos contar depois: o dia que o banco caiu e a gente voltou."
+        }
+      },
+      "Cliente/Stakeholder": {
+        "Subiu em prod e quebrou outra coisa": {
+          "tecnica": "Durante o processo de atualização do sistema, identificamos um impacto em uma funcionalidade adjacente que não foi previsto nos testes de homologação. Estamos priorizando a correção.",
+          "vaga": "Após uma atualização recente, identificamos uma instabilidade que está sendo tratada com prioridade máxima pela nossa equipe técnica.",
+          "dramatica": "Melhoramos uma parte do sistema e outra decidiu protestar. Estamos conversando com ela."
+        },
+        "CI/CD falhou": {
+          "tecnica": "Nosso processo interno de validação automática está com uma intermitência que está impactando o cronograma de entregas. Não há impacto no sistema que você utiliza atualmente.",
+          "vaga": "Estamos passando por uma lentidão nos nossos processos internos de entrega. Isso pode impactar o prazo de algumas entregas previstas.",
+          "dramatica": "Nossos robôs internos estão com problema. Os humanos já estão resolvendo."
+        },
+        "Bug antigo voltou": {
+          "tecnica": "Uma falha que havia sido corrigida foi reintroduzida inadvertidamente por uma atualização recente. Identificamos a causa e estamos implementando a correção definitiva.",
+          "vaga": "Um comportamento inesperado que havia sido resolvido voltou a aparecer. Estamos priorizando a correção e pedimos desculpas pelo inconveniente.",
+          "dramatica": "Esse problema achava que era bem-vindo de volta. Não é. Estamos eliminando ele agora."
+        },
+        "Estimativa estourou": {
+          "tecnica": "Durante o desenvolvimento, identificamos complexidades técnicas não previstas que impactaram o prazo. Optamos por endereçá-las corretamente para garantir qualidade e estabilidade.",
+          "vaga": "O prazo precisou ser ajustado devido a complexidades identificadas durante o desenvolvimento. Queremos garantir que a entrega atenda totalmente às suas expectativas.",
+          "dramatica": "Demorou mais que o prometido. Mas o que vai chegar é o que você merece receber."
+        },
+        "Feature atrasou": {
+          "tecnica": "A funcionalidade encontrou dependências técnicas durante o desenvolvimento que exigiram tempo adicional para implementação adequada. A entrega está prevista para breve.",
+          "vaga": "A nova funcionalidade está levando um pouco mais de tempo que o esperado. Preferimos garantir qualidade antes de disponibilizar.",
+          "dramatica": "A feature não chegou ainda porque ainda não está boa o suficiente para você. E você merece o melhor."
+        },
+        "Ambiente caiu": {
+          "tecnica": "O sistema passou por uma indisponibilidade causada por um problema de infraestrutura que foi identificado e corrigido. Estamos implementando melhorias para garantir maior resiliência.",
+          "vaga": "Passamos por um período de instabilidade que já foi resolvido. Pedimos desculpas pelo inconveniente e estamos trabalhando para garantir que não se repita.",
+          "dramatica": "O sistema ficou fora do ar. Voltou. E agora estamos mais preparados para evitar que aconteça de novo."
+        },
+        "PR parado há dias": {
+          "tecnica": "A mudança está em processo de revisão técnica rigorosa. Preferimos garantir que chegue sem problemas do que acelerar e introduzir instabilidades.",
+          "vaga": "Temos uma entrega em processo de validação interna. Assim que concluirmos a revisão, seguimos com a implementação.",
+          "dramatica": "Estamos revisando com cuidado porque o que vamos entregar para você precisa estar perfeito."
+        },
+        "Test coverage caiu": {
+          "tecnica": "Nossos indicadores internos de qualidade sofreram uma variação temporária. Isso não impacta diretamente a estabilidade do sistema, mas estamos endereçando para manter nossos padrões.",
+          "vaga": "Identificamos uma variação em um dos nossos indicadores de qualidade e estamos trabalhando para normalizá-lo.",
+          "dramatica": "Nosso controle de qualidade interno passou por um momento difícil. Já estamos reconstruindo."
+        },
+        "Deploy na sexta às 17h": {
+          "tecnica": "Realizamos uma atualização em horário não convencional para resolver uma situação que exigia correção imediata. O sistema está estável e sendo monitorado.",
+          "vaga": "Fizemos uma atualização fora do horário padrão para atender a uma necessidade urgente. O sistema está normal.",
+          "dramatica": "Trabalhamos na sexta à noite porque o problema não podia esperar. É o nível de comprometimento que você pode esperar de nós."
+        },
+        "Rollback falhou também": {
+          "tecnica": "O processo de reversão encontrou restrições técnicas. Estamos executando um plano alternativo de recuperação controlada que preserva a integridade dos seus dados.",
+          "vaga": "Encontramos dificuldades no processo de recuperação inicial e estamos executando um plano alternativo. Vamos te manter informado.",
+          "dramatica": "O plano A não funcionou. Isso significa que estamos no plano B, que também temos. Sempre temos."
+        },
+        "Dados duplicados em prod": {
+          "tecnica": "Identificamos uma inconsistência nos dados causada por uma falha em processo de integração. Nenhum dado foi perdido. Estamos construindo e validando a correção antes de aplicar.",
+          "vaga": "Identificamos uma inconsistência nos dados que está sendo corrigida com total cuidado. Seus dados estão seguros.",
+          "dramatica": "Alguns dados apareceram em duplicata. Nada foi perdido. Só duplicado. É muito mais fácil de resolver."
+        },
+        "Alguém deletou o banco": {
+          "tecnica": "Passamos por uma exclusão acidental de dados em produção. O processo de recuperação via backup foi iniciado imediatamente. Seus dados estão sendo restaurados.",
+          "vaga": "Estamos lidando com uma situação crítica e mobilizamos todos os recursos para garantir a recuperação total dos dados. Manteremos você informado.",
+          "dramatica": "Aconteceu o pior cenário possível. E ainda assim temos backup. Vamos sair disso juntos."
+        }
+      },
+      "Outro dev do time": {
+        "Subiu em prod e quebrou outra coisa": {
+          "tecnica": "O módulo que quebrou tem uma dependência no nosso serviço que não estava documentada em lugar nenhum. Tecnicamente, o problema é compartilhado. Só apareceu no meu deploy primeiro.",
+          "vaga": "A gente não tinha visibilidade total do impacto. É o tipo de coisa que o ambiente de staging simplesmente não pega.",
+          "dramatica": "Eu subi. Quebrou. Mas olha o tamanho do acoplamento implícito que a gente tinha aqui sem saber."
+        },
+        "CI/CD falhou": {
+          "tecnica": "O pipeline está falhando num step de lint que estava passando antes. Alguém atualizou a versão do runner sem atualizar as regras. Não é o meu código, é a configuração.",
+          "vaga": "O CI está com problema que não é do código em si. Estou investigando se é configuração ou dependência.",
+          "dramatica": "O CI falhou. Localmente passa tudo. Você já viu esse filme antes, né?"
+        },
+        "Bug antigo voltou": {
+          "tecnica": "O bug voltou porque o fix original dependia de um valor de configuração que foi alterado numa branch diferente e mergeado sem conflito aparente. Não tinha como prever sem rastrear o histórico completo.",
+          "vaga": "Esse bug tem uma história longa. Provavelmente a correção original tinha alguma dependência que ninguém documentou.",
+          "dramatica": "Esse bug é mais antigo que eu na empresa. A culpa é da galera que foi embora."
+        },
+        "Estimativa estourou": {
+          "tecnica": "Quando entrei no código vi que a área tem uma dívida técnica que ninguém tinha mapeado. Tive que ou resolver ou trabalhar em volta dela. Escolhi resolver.",
+          "vaga": "O escopo era maior do que parecia de fora. Acho que a gente subestimou coletivamente.",
+          "dramatica": "Entrei no código e encontrei o caos. Estimei o que via. O que não via era o dobro."
+        },
+        "Feature atrasou": {
+          "tecnica": "Tem uma dependência de um serviço que o outro time ainda não entregou. Não consigo finalizar sem o contrato de API deles estar estabilizado.",
+          "vaga": "Encontrei algumas dependências durante o desenvolvimento que não estavam claras no refinamento. Ainda trabalhando nisso.",
+          "dramatica": "A feature tá quase. Só falta aquela parte que depende de todo o resto do sistema funcionar junto."
+        },
+        "Ambiente caiu": {
+          "tecnica": "O ambiente de desenvolvimento compartilhado estava com o disco cheio por causa dos logs que ninguém rotaciona faz semanas. Não é deploy, é housekeeping que estava pendente.",
+          "vaga": "O ambiente caiu por algo de infraestrutura. Não foi nada do que a gente tava fazendo diretamente.",
+          "dramatica": "O ambiente simplesmente decidiu tirar férias. Sem aviso. Sem justificativa."
+        },
+        "PR parado há dias": {
+          "tecnica": "O PR está esperando review das pessoas com contexto no módulo afetado. Não quero que alguém aprove sem entender o impacto real da mudança.",
+          "vaga": "Estou esperando review de quem tem contexto. Prefiro esperar do que mergear sem validação adequada.",
+          "dramatica": "O PR tá aberto. Os reviewers é que sumiram. Manda um ping pra eles."
+        },
+        "Test coverage caiu": {
+          "tecnica": "Adicionei código de integração que por natureza tem cobertura mais baixa. O índice geral caiu mas as linhas críticas de negócio continuam cobertas.",
+          "vaga": "A cobertura caiu um pouco por causa do código novo que entrou. Vou adicionar os testes nas próximas tasks.",
+          "dramatica": "A cobertura caiu porque eu escrevi código de verdade. Os testes vêm logo."
+        },
+        "Deploy na sexta às 17h": {
+          "tecnica": "Era uma correção crítica com impacto em usuários ativos. Fazer rollback e esperar segunda teria custo maior. Avaliei o risco, documentei e subi.",
+          "vaga": "Precisava subir hoje. Sei que é sexta, mas o problema não podia esperar o fim de semana.",
+          "dramatica": "Sexta às 17h é só um horário. O bug não sabe que é sexta."
+        },
+        "Rollback falhou também": {
+          "tecnica": "O rollback não funcionou porque tinha migração de banco no meio. Agora a gente precisa de forward fix. Já estou trabalhando nisso, me dá 30 minutos.",
+          "vaga": "O rollback encontrou um problema. Estou no plano B. Fica tranquilo que estou com isso.",
+          "dramatica": "Rollback falhou. Respira. Eu tenho o script de recovery. Testei em staging. Quase."
+        },
+        "Dados duplicados em prod": {
+          "tecnica": "A duplicação veio de um processo que rodou duas vezes por causa de um retry automático. Não tinha idempotência garantida. É dívida técnica que todo mundo sabia que existia.",
+          "vaga": "Apareceram dados duplicados por causa de um processo que rodou mais de uma vez. Estou construindo o script de limpeza.",
+          "dramatica": "Os dados se multiplicaram. Como se quisessem fazer amigos. Estou desfazendo os laços."
+        },
+        "Alguém deletou o banco": {
+          "tecnica": "Executei um DROP sem o WHERE. Em produção. Já iniciei o restore do backup das 3h. O RPO é de algumas horas de dados. Estou documentando tudo.",
+          "vaga": "Aconteceu um acidente sério. Já estou no processo de recuperação. Me dá espaço pra resolver.",
+          "dramatica": "Eu deletei o banco. Pode me xingar depois. Agora me deixa restaurar."
+        }
+      },
+      "Dev Sênior Irritado": {
+        "Subiu em prod e quebrou outra coisa": {
+          "tecnica": "O acoplamento que causou o problema existe há dois anos no codebase. Eu sinalizei no design review do ano passado. Não é a primeira vez que isso explode.",
+          "vaga": "Esse tipo de coisa acontece quando não temos documentação de dependências adequada. É um problema sistêmico, não pontual.",
+          "dramatica": "Quebrou o que sempre esteve prestes a quebrar. Eu só fui o responsável pelo deploy que revelou a verdade."
+        },
+        "CI/CD falhou": {
+          "tecnica": "O pipeline tem testes flaky há meses. Abrimos a issue. Ninguém priorizou. Agora está bloqueando entregas. É técnica acumulada virando problema operacional.",
+          "vaga": "O CI está instável por causa de problemas que já foram apontados antes. É a dívida técnica cobrando juros.",
+          "dramatica": "O CI falhou porque ninguém consertou o que estava quebrado. Eu avisei. Está nos meus comentários de PR de março."
+        },
+        "Bug antigo voltou": {
+          "tecnica": "Esse bug voltou porque o fix original era um workaround sem teste de regressão. Eu comentei na época que precisava de uma solução estrutural. O comentário ainda está aberto no Jira.",
+          "vaga": "Problemas resolvidos com pressa voltam. É o padrão. Precisamos de tempo para fazer certo.",
+          "dramatica": "Esse bug é mais velho que a maioria das pessoas que tentaram corrigir ele. Incluindo eu."
+        },
+        "Estimativa estourou": {
+          "tecnica": "A estimativa foi feita sem olhar o código. Se tivessem me envolvido no refinamento eu teria apontado a dívida técnica que está causando o estouro agora.",
+          "vaga": "Estimativas sem contexto técnico adequado têm esse resultado. Precisamos de mais tempo de refinamento.",
+          "dramatica": "Estimou sem ler o código. Código não mente. Cronograma sim."
+        },
+        "Feature atrasou": {
+          "tecnica": "A feature tem dependência de um módulo que nunca foi refatorado adequadamente. Todo mundo que toca lá demora mais que o estimado. É padrão.",
+          "vaga": "Algumas partes do sistema têm um custo de mudança maior que outras. Essa feature tocou em uma dessas partes.",
+          "dramatica": "A feature atrasou porque o sistema não foi construído para receber essa feature. Construímos enquanto voamos."
+        },
+        "Ambiente caiu": {
+          "tecnica": "O ambiente está rodando em configuração subdimensionada faz meses. Apontei isso na reunião de capacity planning. A decisão foi manter assim. Bem-vindos às consequências.",
+          "vaga": "A infraestrutura estava no limite. Esse evento era questão de quando, não de se.",
+          "dramatica": "O ambiente caiu porque estava sendo mantido vivo por força de vontade e memória RAM insuficiente."
+        },
+        "PR parado há dias": {
+          "tecnica": "Não vou dar LGTM em PR que não tem testes adequados. Se quer que eu aprove mais rápido, escreve os testes. Não é pessoal, é processo.",
+          "vaga": "Tenho padrões mínimos que preciso ver antes de aprovar. Não é burocracia, é responsabilidade.",
+          "dramatica": "PR parado porque eu me importo com o que vai para produção. Você deveria agradecer."
+        },
+        "Test coverage caiu": {
+          "tecnica": "A cobertura caiu porque alguém mergeou código sem testes e o pipeline não bloqueia por threshold de coverage. Dois problemas de processo num só.",
+          "vaga": "Sem enforcement automático de cobertura, isso vai continuar acontecendo. Precisamos de gate no CI.",
+          "dramatica": "Cobertura caiu porque foi deixada cair. Não por acidente. Por pressa."
+        },
+        "Deploy na sexta às 17h": {
+          "tecnica": "Deploy na sexta é anti-pattern documentado. Se era urgente, é porque algo no processo anterior falhou. O deploy é sintoma, não causa.",
+          "vaga": "Deploys em horário de risco são consequência de problemas de processo mais cedo. Precisamos endereçar a causa raiz.",
+          "dramatica": "Sexta às 17h. De novo. Alguém precisa escrever um ADR proibindo isso antes que eu escreva."
+        },
+        "Rollback falhou também": {
+          "tecnica": "O rollback falhou porque o deploy tinha migração de schema sem script de rollback correspondente. É uma das práticas que defendo há anos. Hoje é o dia de entender por quê.",
+          "vaga": "Rollback sem preparação adequada não funciona. Precisamos de runbooks de reversão para cada deploy.",
+          "dramatica": "Plano de rollback feito em 5 minutos antes do deploy não é plano. É esperança."
+        },
+        "Dados duplicados em prod": {
+          "tecnica": "Idempotência em processos de ingestão não é opcional. Esse problema era previsível. A arquitetura não garantia idempotência e todo mundo sabia.",
+          "vaga": "Processos sem garantia de idempotência eventualmente causam duplicação. É uma questão de design que precisa ser endereçada.",
+          "dramatica": "Os dados se duplicaram porque o sistema foi construído com fé em vez de contratos. Fé não escala."
+        },
+        "Alguém deletou o banco": {
+          "tecnica": "Banco de produção sem proteção contra DROP é um risco que pode ser mitigado com soft delete, permissões restritas e confirmação de ambiente. Temos todos esses pontos em aberto.",
+          "vaga": "Precisamos de controles de acesso mais rígidos em produção. Isso não deveria ser possível acontecer.",
+          "dramatica": "O banco foi deletado. Eu gostaria de dizer que estou surpreso. Não estou."
+        }
+      },
+      "Auditor/Compliance": {
+        "Subiu em prod e quebrou outra coisa": {
+          "tecnica": "A mudança passou pelo processo de aprovação padrão. O impacto colateral ocorreu em um módulo com dependência não documentada. Estamos atualizando o mapa de dependências e o processo de change management.",
+          "vaga": "A atualização gerou um impacto não previsto. Estamos documentando o ocorrido e revisando nossos controles de validação pré-deploy.",
+          "dramatica": "O sistema foi alterado seguindo o processo. O processo revelou uma lacuna. Estamos fechando a lacuna."
+        },
+        "CI/CD falhou": {
+          "tecnica": "A falha no pipeline de entrega contínua está documentada e sendo tratada. Não houve bypass do processo de validação. Nenhuma entrega foi realizada sem passar pelos controles automatizados.",
+          "vaga": "Nosso processo de entrega está com uma instabilidade que está sendo tratada dentro dos controles estabelecidos. Nenhum processo de governança foi comprometido.",
+          "dramatica": "O pipeline falhou. Isso significa que os controles funcionaram. Nada passou sem validação."
+        },
+        "Bug antigo voltou": {
+          "tecnica": "A reintrodução do defeito foi causada por uma mudança indireta não rastreada no sistema de change management. Estamos atualizando o processo para garantir rastreabilidade completa de regressões.",
+          "vaga": "Um defeito previamente corrigido foi reintroduzido. Estamos revisando nosso processo de gestão de mudanças para garantir maior controle.",
+          "dramatica": "O defeito voltou. O registro dele também. Temos evidência de que foi corrigido antes. Agora temos evidência de que voltou. Rastreabilidade completa."
+        },
+        "Estimativa estourou": {
+          "tecnica": "O estouro de prazo foi causado por complexidade técnica identificada durante a execução. O desvio foi comunicado assim que identificado. Estamos documentando para calibrar processos futuros de estimativa.",
+          "vaga": "Houve um desvio de prazo que foi comunicado às partes interessadas. Estamos documentando as causas para melhorar nosso processo de planejamento.",
+          "dramatica": "O prazo estourou. Está documentado. Com causa raiz. Com lição aprendida. Com plano de ação. Tudo registrado."
+        },
+        "Feature atrasou": {
+          "tecnica": "A entrega está atrasada por dependências técnicas identificadas durante o desenvolvimento. O atraso foi comunicado formalmente e está documentado no sistema de gestão de projetos.",
+          "vaga": "Temos um atraso na entrega que está sendo gerenciado dentro dos processos estabelecidos. A comunicação foi feita às partes relevantes.",
+          "dramatica": "A entrega atrasou. O atraso foi registrado. A causa foi documentada. O processo foi seguido."
+        },
+        "Ambiente caiu": {
+          "tecnica": "A indisponibilidade foi registrada com timestamp, causa identificada e tempo de recuperação documentado. O RTO foi respeitado dentro dos parâmetros do SLA vigente. Postmortem será elaborado.",
+          "vaga": "Tivemos uma indisponibilidade que está sendo documentada conforme nosso processo de gestão de incidentes. Todas as etapas de comunicação foram seguidas.",
+          "dramatica": "O ambiente caiu. O incidente foi aberto. O SLA foi medido. A comunicação foi feita. O processo funcionou."
+        },
+        "PR parado há dias": {
+          "tecnica": "O código está em processo de revisão conforme exigido pelo nosso processo de controle de mudanças. Não há bypass do processo de aprovação. A mudança só avança após revisão adequada.",
+          "vaga": "A mudança está passando pelo processo de revisão estabelecido. Esse controle existe exatamente para garantir qualidade e rastreabilidade.",
+          "dramatica": "O código está esperando aprovação. Isso é o processo funcionando, não falhando."
+        },
+        "Test coverage caiu": {
+          "tecnica": "A redução na cobertura de testes foi identificada e está sendo monitorada. Temos visibilidade sobre as áreas não cobertas e um plano de ação documentado para recuperação do índice.",
+          "vaga": "Houve uma variação no nosso indicador de cobertura de testes. Estamos endereçando e documentando o plano de ação.",
+          "dramatica": "A cobertura caiu. Temos o número exato. Temos o delta. Temos o plano. Temos a data. Tudo documentado."
+        },
+        "Deploy na sexta às 17h": {
+          "tecnica": "O deploy foi realizado em horário não convencional seguindo o processo de mudança emergencial documentado. A aprovação foi obtida conforme o fluxo de change management para situações críticas.",
+          "vaga": "A mudança foi realizada fora do horário padrão seguindo nosso processo de mudança emergencial. Toda a documentação foi gerada.",
+          "dramatica": "Deploy na sexta com aprovação registrada, justificativa documentada e monitoramento ativo. O processo foi seguido."
+        },
+        "Rollback falhou também": {
+          "tecnica": "O processo de reversão encontrou restrições técnicas documentadas. Estamos executando o procedimento alternativo de recovery conforme o runbook de incidentes críticos. Todas as ações estão sendo registradas.",
+          "vaga": "O processo de reversão padrão encontrou limitações e estamos executando o procedimento alternativo estabelecido. Toda a trilha de ações está sendo documentada.",
+          "dramatica": "Rollback falhou. Está documentado. Plano B em execução. Está documentado. Cada passo desta crise tem registro."
+        },
+        "Dados duplicados em prod": {
+          "tecnica": "A duplicação de dados foi identificada, catalogada e está sendo corrigida seguindo processo de change management para dados em produção. Nenhuma alteração será feita sem validação e aprovação adequadas.",
+          "vaga": "Identificamos uma inconsistência nos dados e estamos seguindo nosso processo de correção de dados em produção. Toda a rastreabilidade está sendo mantida.",
+          "dramatica": "Dados duplicados. Catalogados. Impacto mapeado. Processo de correção iniciado com aprovação. Auditoria possível em cada etapa."
+        },
+        "Alguém deletou o banco": {
+          "tecnica": "Houve uma exclusão não autorizada de dados em produção. O incidente foi registrado imediatamente. O processo de recuperação foi iniciado. Estamos preservando toda a evidência para análise forense e revisão de controles de acesso.",
+          "vaga": "Estamos lidando com um incidente crítico de dados seguindo nosso plano de resposta a incidentes. Toda a comunicação e documentação está sendo gerada conforme o processo.",
+          "dramatica": "O pior cenário aconteceu. O processo de resposta foi ativado. Tudo está sendo documentado. Isso vai virar case de melhoria de controles."
+        }
+      }
+    },
+    "en": {
+      "PM/PO": {
+        "Deployed to prod and broke something else": {
+          "tecnica": "The change introduced a side effect in a module with undocumented implicit coupling. The blast radius only became visible after deployment because the staging environment doesn't replicate production's transactional volume.",
+          "vaga": "We're assessing the systemic impact of the release. Some dependencies not anticipated in the original plan need to be addressed before we can confirm stability.",
+          "dramatica": "We did everything right. The environment decided to betray the team at the exact moment we needed it most."
+        },
+        "CI/CD failed": {
+          "tecnica": "The pipeline failed on a service contract validation step. The root cause is a version mismatch between the CI runner and the production image that wasn't mapped in our compatibility matrix.",
+          "vaga": "The continuous delivery process identified an inconsistency that needs to be resolved before we proceed. We're working to normalize the flow.",
+          "dramatica": "The CI didn't fail. It saved us from an even bigger disaster. We should be grateful."
+        },
+        "Old bug came back": {
+          "tecnica": "The behavior was reintroduced because the original fix was coupled to a feature flag that was disabled during the last config cleanup campaign. There was no test covering that path.",
+          "vaga": "A situation that had been previously addressed resurfaced due to changes in the operational context. We're reviewing the history to ensure a definitive solution.",
+          "dramatica": "It never really left. It was just waiting for the right moment to come back."
+        },
+        "Estimate blew up": {
+          "tecnica": "The original estimate didn't account for the time needed to discover hidden dependencies in the integration layer. The actual effort included reverse engineering an undocumented module.",
+          "vaga": "The scope revealed additional complexities during execution that weren't visible in the planning phase. We're adjusting our estimation methodology.",
+          "dramatica": "We estimated with the information we had. The system decided to reveal its true nature only after we started."
+        },
+        "Feature delayed": {
+          "tecnica": "The feature depends on a third-party API that changed its contract without notice. We need additional time to adapt the integration layer and ensure compatibility.",
+          "vaga": "We identified areas of concern during development that require alignment before delivery. We want to ensure it arrives with quality.",
+          "dramatica": "The feature is ready as far as it depends on us. The universe has other opinions."
+        },
+        "Environment went down": {
+          "tecnica": "The environment suffered an OOM kill on one of the pods due to a memory leak in an auxiliary service that wasn't within our active monitoring scope. The automatic restart failed due to a health check misconfiguration.",
+          "vaga": "We're facing an infrastructure instability that's being handled with priority by the responsible team. We'll resume as soon as it normalizes.",
+          "dramatica": "The environment went down. Not because we failed — but because it was carrying more than any system should bear."
+        },
+        "PR stuck for days": {
+          "tecnica": "The PR is awaiting review of a critical module that requires approval from someone with deep context in the security domain. We don't want to merge without proper validation.",
+          "vaga": "We're ensuring the review process is carried out with the necessary rigor. Some deliveries need more attention before moving forward.",
+          "dramatica": "The PR isn't stuck. It's maturing. Good code doesn't rush."
+        },
+        "Test coverage dropped": {
+          "tecnica": "Coverage dropped because we added new code branches in integration modules that are inherently difficult to unit test without complex mocks that would introduce false positives.",
+          "vaga": "There was a temporary coverage adjustment during a more complex delivery. We have a plan to restore the index in upcoming sprints.",
+          "dramatica": "Coverage dropped because we were building. Sometimes you need to break the ground before you can pave it."
+        },
+        "Friday 5pm deploy": {
+          "tecnica": "The deploy was necessary to fix a critical regression identified in production. We followed the emergency runbook and have rollback available if needed.",
+          "vaga": "The release was planned considering the urgency of the context. We're monitoring closely to ensure stability.",
+          "dramatica": "Friday at 5pm is just a time. Bugs don't respect calendars."
+        },
+        "Rollback failed too": {
+          "tecnica": "The rollback failed because the database schema had already been migrated and the previous version isn't compatible with the current data state. We're executing a forward fix to restore consistency.",
+          "vaga": "The rollback process encountered some technical constraints we're addressing. The solution is being built carefully to avoid additional impact.",
+          "dramatica": "When plan B fails, you find out who you really are. We're finding out now."
+        },
+        "Duplicate data in prod": {
+          "tecnica": "The duplication occurred due to a race condition in an ingestion process that lacked idempotency guarantees. The issue was amplified by an automatic retry that fired before the uniqueness constraint was applied.",
+          "vaga": "We identified a data inconsistency that's being investigated and corrected. We're mapping the impact to ensure complete integrity.",
+          "dramatica": "The data duplicated itself. As if the system wanted to make sure we wouldn't lose anything important."
+        },
+        "Someone deleted the database": {
+          "tecnica": "There was an unauthorized execution of a destructive command in the production environment. We're initiating the restore process from the last valid snapshot and evaluating the RPO.",
+          "vaga": "We're dealing with a critical data situation and mobilizing all available resources for recovery. We'll update you as soon as we have a clear picture.",
+          "dramatica": "The database was deleted. Breathe. We have backups. Probably."
+        }
+      },
+      "CTO/Manager": {
+        "Deployed to prod and broke something else": {
+          "tecnica": "The blast radius of the change wasn't fully mapped in the design review. There was an implicit contract between two services that wasn't documented in the updated dependency diagram.",
+          "vaga": "The release generated an unforeseen impact that we're addressing. I'll make sure the validation process is revised to prevent recurrence.",
+          "dramatica": "We deployed. Something broke. We're fixing it. That's exactly what we have observability for."
+        },
+        "CI/CD failed": {
+          "tecnica": "We have a flaky test that's intermittently blocking the pipeline. The root cause is an integration test with a timing dependency that isn't deterministic in environments with variable latency.",
+          "vaga": "The pipeline had a failure that's being investigated. We're evaluating whether it's a one-off or structural issue before making a decision.",
+          "dramatica": "The CI failed. But at least the CI exists. Could be worse."
+        },
+        "Old bug came back": {
+          "tecnica": "The bug was reintroduced by a change in the default behavior of an updated dependency. The regression test didn't cover this behavior variation in the latest version.",
+          "vaga": "An issue that had been resolved previously resurfaced. We're investigating the cause to ensure the fix is definitive this time.",
+          "dramatica": "This bug has more lives than a cat. This time we're burying it for good."
+        },
+        "Estimate blew up": {
+          "tecnica": "The overrun came from the late discovery of tech debt in the data layer that wasn't visible during refinement. The cost of addressing it during development was higher than estimated.",
+          "vaga": "The actual complexity of the task exceeded the initial estimate. We're documenting the learnings to calibrate better in future estimates.",
+          "dramatica": "We estimated what we could see. What we couldn't see was bigger."
+        },
+        "Feature delayed": {
+          "tecnica": "The delay was caused by a requirement change identified during development that required a partial redesign of the solution. I prioritized correctness over speed.",
+          "vaga": "The delivery is taking longer than expected due to complexities identified during development. I'd rather deliver right than fast.",
+          "dramatica": "The feature will arrive. It just won't arrive broken."
+        },
+        "Environment went down": {
+          "tecnica": "We had a cascading failure initiated by a low-priority service that consumed resources beyond its configured limit. The circuit breaker didn't trigger because the threshold was miscalibrated.",
+          "vaga": "The environment experienced an instability that's being investigated. We're reviewing resilience configurations to prevent recurrence.",
+          "dramatica": "The environment went down. We documented everything. It's going to make an exemplary postmortem."
+        },
+        "PR stuck for days": {
+          "tecnica": "The PR touches a sensitive area of the codebase that requires careful review. I'd rather it stays open a few extra days than merge something that'll cause production issues.",
+          "vaga": "We're ensuring the proper review process for a higher-criticality change. Quality has no deadline.",
+          "dramatica": "A stalled PR is a respected PR. Fast merges are where problems are born."
+        },
+        "Test coverage dropped": {
+          "tecnica": "The coverage drop is temporary and a direct result of increased integration code that, by design, has lower coverage than domain code. The index will recover in upcoming releases.",
+          "vaga": "There was a coverage variation that's being monitored. We have visibility over the uncovered areas and a plan to address them.",
+          "dramatica": "Coverage dropped. New code was written. These things sometimes happen together."
+        },
+        "Friday 5pm deploy": {
+          "tecnica": "I assessed the risk and decided the cost of waiting until Monday was higher than the deployment risk. We have active monitoring and an on-call team ready to intervene if needed.",
+          "vaga": "The deploy decision was made after risk analysis. We have enhanced monitoring to ensure stability over the weekend.",
+          "dramatica": "Friday at 5pm with a rollback ready is better than Monday at 9am without one."
+        },
+        "Rollback failed too": {
+          "tecnica": "The rollback encountered a schema incompatibility that wasn't mapped in the reversion plan. We're executing a forward patch to restore consistent state without data loss.",
+          "vaga": "The rollback process encountered technical constraints. We're executing an alternative recovery plan with full control over the data.",
+          "dramatica": "Rollback failed. Means we need to be more creative. We already are."
+        },
+        "Duplicate data in prod": {
+          "tecnica": "The duplication is the result of a process without idempotency guarantees that ran twice in overlapping windows. We're building a deduplication script with validation before execution.",
+          "vaga": "We identified data inconsistency and are working on the correction carefully to avoid making things worse. I'll update you with the action plan.",
+          "dramatica": "Duplicate data. Could be worse. Could be deleted data."
+        },
+        "Someone deleted the database": {
+          "tecnica": "We executed a destructive command in production without adequate protection. We're running a restore from the last valid backup and reviewing access controls to ensure this doesn't happen again.",
+          "vaga": "We're handling a critical situation with full priority. The recovery process has been initiated and I'll keep you informed at every step.",
+          "dramatica": "The database was deleted. It's happened to companies bigger than ours. We're recovering."
+        }
+      },
+      "CEO/Founder": {
+        "Deployed to prod and broke something else": {
+          "tecnica": "We had a side effect in production caused by unmapped coupling between systems. The team is fixing it and reinforcing validation processes to prevent recurrence.",
+          "vaga": "We experienced instability after a release. We're fixing it and using the learning to strengthen our process.",
+          "dramatica": "This happens when you grow fast. We're fixing it and coming out stronger."
+        },
+        "CI/CD failed": {
+          "tecnica": "Our continuous delivery pipeline has an intermittent failure that's delaying deployments. It's not a product issue, it's engineering infrastructure. We already have people on it.",
+          "vaga": "We have a temporary slowdown in our delivery process. It doesn't impact the product in production, only the speed of new releases.",
+          "dramatica": "The pipeline broke. The good news: we have a pipeline. That already puts us ahead of most companies."
+        },
+        "Old bug came back": {
+          "tecnica": "A bug that had been fixed was reintroduced by an indirect change. We've identified the cause, are fixing it, and adding test coverage to ensure it doesn't come back.",
+          "vaga": "A problem that was resolved resurfaced. We're fixing it with priority and reviewing the process to prevent regressions.",
+          "dramatica": "The bug came back. But so did we. And this time we're ready."
+        },
+        "Estimate blew up": {
+          "tecnica": "The actual technical complexity was higher than estimated. We discovered tech debt during execution that needed to be addressed to ensure delivery quality.",
+          "vaga": "The timeline needed to be adjusted due to complexities that emerged during development. We'd rather deliver right than deliver fast.",
+          "dramatica": "It took longer. But it'll arrive working. That's what matters for the customer."
+        },
+        "Feature delayed": {
+          "tecnica": "The feature encountered technical dependencies that weren't visible during initial refinement. We chose to solve them properly instead of shipping with workarounds that would create future problems.",
+          "vaga": "The delivery is taking longer than planned. We're ensuring it arrives with the quality our product demands.",
+          "dramatica": "The market can wait. A bad feature shipped fast does more harm than a good feature shipped late."
+        },
+        "Environment went down": {
+          "tecnica": "We had an outage caused by resource exhaustion in an infrastructure component. The system has been restored and we're implementing safeguards to prevent recurrence.",
+          "vaga": "We went through a period of instability that's already been resolved. We're reinforcing our infrastructure to ensure greater availability.",
+          "dramatica": "It went down. It came back. It'll stay up. That's what resilient systems do."
+        },
+        "PR stuck for days": {
+          "tecnica": "We have changes in review awaiting adequate technical validation. It's not slowness, it's process. Merging without proper review costs much more later.",
+          "vaga": "Some deliveries are in the validation process. We'd rather ensure quality before moving forward.",
+          "dramatica": "Code sitting in review is code being cared for. The alternative is code going straight into a crisis."
+        },
+        "Test coverage dropped": {
+          "tecnica": "Test coverage had a temporary drop during a period of high new code addition. We have a plan to recover the index and we ensure critical areas remain covered.",
+          "vaga": "There was a variation in our quality indicators that we're addressing. Our highest-risk areas remain protected.",
+          "dramatica": "Fewer tests today means more speed tomorrow if we do it right. We're doing it right."
+        },
+        "Friday 5pm deploy": {
+          "tecnica": "We deployed at an unconventional time to resolve a critical situation. The decision was based on risk analysis and we have active monitoring.",
+          "vaga": "We made a delivery decision outside the standard pattern out of necessity. We have heightened attention to ensure stability.",
+          "dramatica": "Friday at 5pm because the problem couldn't wait until Monday. That's what committed teams do."
+        },
+        "Rollback failed too": {
+          "tecnica": "The rollback process encountered data compatibility constraints. We're executing an alternative recovery plan with full traceability and no additional risk to the data.",
+          "vaga": "We encountered difficulties in the rollback process and are executing a structured plan B. I'll keep you updated every hour.",
+          "dramatica": "Plan A failed. Plan B is in progress. We always have a plan C. That's how prepared teams operate."
+        },
+        "Duplicate data in prod": {
+          "tecnica": "We identified data duplications caused by an idempotency failure in an ingestion process. We're building and validating the fix script before executing to ensure integrity.",
+          "vaga": "We have a data inconsistency that's being carefully corrected. No data was lost, only duplicated.",
+          "dramatica": "Duplicate data is a problem with a solution. Lost data isn't. We're in the best possible scenario here."
+        },
+        "Someone deleted the database": {
+          "tecnica": "We had an accidental data deletion in production. The backup recovery process was initiated immediately. We're evaluating the RPO and reinforcing access controls.",
+          "vaga": "We're handling a critical infrastructure situation with full priority. Recovery is underway and I'll update you every 30 minutes.",
+          "dramatica": "The worst happened. And we have backups. This is the story we'll tell later: the day the database went down and we came back."
+        }
+      },
+      "Client/Stakeholder": {
+        "Deployed to prod and broke something else": {
+          "tecnica": "During the system update process, we identified an impact on an adjacent functionality that wasn't caught in acceptance testing. We're prioritizing the fix.",
+          "vaga": "After a recent update, we identified an instability that's being handled with top priority by our technical team.",
+          "dramatica": "We improved one part of the system and another decided to protest. We're having a talk with it."
+        },
+        "CI/CD failed": {
+          "tecnica": "Our internal automated validation process has an intermittent issue that's impacting the delivery timeline. There's no impact on the system you're currently using.",
+          "vaga": "We're experiencing a slowdown in our internal delivery processes. This may impact the timeline of some planned releases.",
+          "dramatica": "Our internal robots are having issues. The humans are already fixing it."
+        },
+        "Old bug came back": {
+          "tecnica": "A defect that had been fixed was inadvertently reintroduced by a recent update. We've identified the cause and are implementing the definitive fix.",
+          "vaga": "An unexpected behavior that had been resolved has reappeared. We're prioritizing the fix and apologize for the inconvenience.",
+          "dramatica": "This problem thought it was welcome back. It's not. We're eliminating it now."
+        },
+        "Estimate blew up": {
+          "tecnica": "During development, we identified unforeseen technical complexities that impacted the timeline. We chose to address them properly to ensure quality and stability.",
+          "vaga": "The timeline needed to be adjusted due to complexities identified during development. We want to ensure the delivery fully meets your expectations.",
+          "dramatica": "It took longer than promised. But what's coming is what you deserve to receive."
+        },
+        "Feature delayed": {
+          "tecnica": "The functionality encountered technical dependencies during development that required additional time for proper implementation. Delivery is expected shortly.",
+          "vaga": "The new functionality is taking a bit longer than expected. We prefer to ensure quality before making it available.",
+          "dramatica": "The feature hasn't arrived yet because it's not good enough for you yet. And you deserve the best."
+        },
+        "Environment went down": {
+          "tecnica": "The system experienced downtime caused by an infrastructure issue that was identified and corrected. We're implementing improvements to ensure greater resilience.",
+          "vaga": "We went through a period of instability that's already been resolved. We apologize for the inconvenience and are working to ensure it doesn't happen again.",
+          "dramatica": "The system went down. It's back. And now we're better prepared to prevent it from happening again."
+        },
+        "PR stuck for days": {
+          "tecnica": "The change is undergoing rigorous technical review. We prefer to ensure it arrives without issues rather than rush and introduce instabilities.",
+          "vaga": "We have a delivery going through internal validation. Once the review is complete, we'll proceed with the implementation.",
+          "dramatica": "We're reviewing carefully because what we deliver to you needs to be perfect."
+        },
+        "Test coverage dropped": {
+          "tecnica": "Our internal quality indicators experienced a temporary variation. This doesn't directly impact system stability, but we're addressing it to maintain our standards.",
+          "vaga": "We identified a variation in one of our quality indicators and are working to normalize it.",
+          "dramatica": "Our internal quality control went through a tough moment. We're already rebuilding."
+        },
+        "Friday 5pm deploy": {
+          "tecnica": "We performed an update at an unconventional time to resolve a situation that required immediate correction. The system is stable and being monitored.",
+          "vaga": "We made an update outside standard hours to address an urgent need. The system is running normally.",
+          "dramatica": "We worked on Friday evening because the problem couldn't wait. That's the level of commitment you can expect from us."
+        },
+        "Rollback failed too": {
+          "tecnica": "The rollback process encountered technical constraints. We're executing an alternative controlled recovery plan that preserves the integrity of your data.",
+          "vaga": "We encountered difficulties in the initial recovery process and are executing an alternative plan. We'll keep you informed.",
+          "dramatica": "Plan A didn't work. That means we're on plan B, which we also have. We always do."
+        },
+        "Duplicate data in prod": {
+          "tecnica": "We identified a data inconsistency caused by a failure in the integration process. No data was lost. We're building and validating the fix before applying it.",
+          "vaga": "We identified a data inconsistency that's being corrected with utmost care. Your data is safe.",
+          "dramatica": "Some data appeared in duplicate. Nothing was lost. Just duplicated. That's much easier to fix."
+        },
+        "Someone deleted the database": {
+          "tecnica": "We experienced an accidental data deletion in production. The backup recovery process was initiated immediately. Your data is being restored.",
+          "vaga": "We're dealing with a critical situation and have mobilized all resources to ensure full data recovery. We'll keep you informed.",
+          "dramatica": "The worst possible scenario happened. And we still have backups. We'll get through this together."
+        }
+      },
+      "Fellow Dev": {
+        "Deployed to prod and broke something else": {
+          "tecnica": "The module that broke has a dependency on our service that wasn't documented anywhere. Technically, the problem is shared. It just showed up on my deploy first.",
+          "vaga": "We didn't have full visibility of the impact. It's the kind of thing staging simply doesn't catch.",
+          "dramatica": "I deployed. It broke. But look at the implicit coupling we had here without knowing."
+        },
+        "CI/CD failed": {
+          "tecnica": "The pipeline is failing on a lint step that was passing before. Someone updated the runner version without updating the rules. It's not my code, it's the config.",
+          "vaga": "The CI has an issue that's not with the code itself. I'm investigating whether it's config or dependency.",
+          "dramatica": "The CI failed. Locally everything passes. You've seen this movie before, right?"
+        },
+        "Old bug came back": {
+          "tecnica": "The bug came back because the original fix depended on a config value that was changed in a different branch and merged without apparent conflict. No way to predict it without tracing the full history.",
+          "vaga": "This bug has a long history. The original fix probably had some dependency nobody documented.",
+          "dramatica": "This bug is older than me at this company. Blame the people who already left."
+        },
+        "Estimate blew up": {
+          "tecnica": "When I got into the code I saw the area has tech debt nobody had mapped. I had to either fix it or work around it. I chose to fix it.",
+          "vaga": "The scope was bigger than it looked from outside. I think we collectively underestimated it.",
+          "dramatica": "I dove into the code and found chaos. I estimated what I could see. What I couldn't see was double."
+        },
+        "Feature delayed": {
+          "tecnica": "There's a dependency on a service the other team hasn't delivered yet. I can't finalize without their API contract being stable.",
+          "vaga": "Found some dependencies during development that weren't clear in refinement. Still working on it.",
+          "dramatica": "The feature is almost there. Just missing the part that depends on the entire rest of the system working together."
+        },
+        "Environment went down": {
+          "tecnica": "The shared dev environment had a full disk because of logs nobody has rotated in weeks. It's not a deploy issue, it's housekeeping that was overdue.",
+          "vaga": "The environment went down due to an infra issue. It wasn't anything we were doing directly.",
+          "dramatica": "The environment just decided to take a vacation. No warning. No explanation."
+        },
+        "PR stuck for days": {
+          "tecnica": "The PR is waiting for review from people with context on the affected module. I don't want someone to approve without understanding the real impact of the change.",
+          "vaga": "Waiting for review from someone with context. I'd rather wait than merge without proper validation.",
+          "dramatica": "The PR is open. The reviewers are the ones who vanished. Send them a ping."
+        },
+        "Test coverage dropped": {
+          "tecnica": "I added integration code that inherently has lower coverage. The overall index dropped but critical business lines remain covered.",
+          "vaga": "Coverage dropped a bit because of new code that went in. I'll add the tests in the next tasks.",
+          "dramatica": "Coverage dropped because I wrote actual code. The tests are coming soon."
+        },
+        "Friday 5pm deploy": {
+          "tecnica": "It was a critical fix with impact on active users. Rolling back and waiting until Monday would've cost more. I assessed the risk, documented it, and shipped it.",
+          "vaga": "Needed to ship today. I know it's Friday, but the problem couldn't wait through the weekend.",
+          "dramatica": "Friday at 5pm is just a time. The bug doesn't know it's Friday."
+        },
+        "Rollback failed too": {
+          "tecnica": "The rollback didn't work because there was a database migration in the middle. Now we need a forward fix. I'm already working on it, give me 30 minutes.",
+          "vaga": "The rollback hit a problem. I'm on plan B. Don't worry, I've got this.",
+          "dramatica": "Rollback failed. Breathe. I have the recovery script. Tested it in staging. Almost."
+        },
+        "Duplicate data in prod": {
+          "tecnica": "The duplication came from a process that ran twice due to an automatic retry. There were no idempotency guarantees. It's tech debt everyone knew about.",
+          "vaga": "Duplicate data appeared because a process ran more than once. I'm building the cleanup script.",
+          "dramatica": "The data multiplied. Like it wanted to make friends. I'm breaking up the relationships."
+        },
+        "Someone deleted the database": {
+          "tecnica": "I ran a DROP without a WHERE clause. In production. I've already started the restore from the 3am backup. The RPO is a few hours of data. I'm documenting everything.",
+          "vaga": "A serious accident happened. I'm already in the recovery process. Give me space to fix this.",
+          "dramatica": "I deleted the database. You can yell at me later. Right now let me restore it."
+        }
+      },
+      "Angry Senior Dev": {
+        "Deployed to prod and broke something else": {
+          "tecnica": "The coupling that caused this has existed in the codebase for two years. I flagged it in last year's design review. This isn't the first time it's blown up.",
+          "vaga": "This kind of thing happens when we don't have proper dependency documentation. It's a systemic problem, not a one-off.",
+          "dramatica": "What broke was always about to break. I just happened to be the one whose deploy revealed the truth."
+        },
+        "CI/CD failed": {
+          "tecnica": "The pipeline has had flaky tests for months. We opened the issue. Nobody prioritized it. Now it's blocking releases. Accumulated tech debt becoming an operational problem.",
+          "vaga": "The CI is unstable because of issues that were flagged before. It's tech debt collecting interest.",
+          "dramatica": "The CI failed because nobody fixed what was already broken. I warned you. It's in my PR comments from March."
+        },
+        "Old bug came back": {
+          "tecnica": "This bug came back because the original fix was a workaround without a regression test. I commented at the time that it needed a structural solution. The comment is still open in Jira.",
+          "vaga": "Problems solved in a rush come back. It's the pattern. We need time to do it right.",
+          "dramatica": "This bug is older than most of the people who've tried to fix it. Including me."
+        },
+        "Estimate blew up": {
+          "tecnica": "The estimate was made without looking at the code. If they'd involved me in refinement, I would've flagged the tech debt that's causing the overrun now.",
+          "vaga": "Estimates without adequate technical context produce these results. We need more refinement time.",
+          "dramatica": "Estimated without reading the code. Code doesn't lie. Timelines do."
+        },
+        "Feature delayed": {
+          "tecnica": "The feature depends on a module that was never properly refactored. Everyone who touches it takes longer than estimated. It's the pattern.",
+          "vaga": "Some parts of the system have a higher cost of change than others. This feature touched one of those parts.",
+          "dramatica": "The feature is late because the system wasn't built to receive this feature. We're building the plane while flying it."
+        },
+        "Environment went down": {
+          "tecnica": "The environment has been running on undersized configuration for months. I raised this in the capacity planning meeting. The decision was to keep it as-is. Welcome to the consequences.",
+          "vaga": "The infrastructure was at its limit. This event was a matter of when, not if.",
+          "dramatica": "The environment went down because it was being kept alive by sheer willpower and insufficient RAM."
+        },
+        "PR stuck for days": {
+          "tecnica": "I won't LGTM a PR that doesn't have proper tests. If you want me to approve faster, write the tests. It's not personal, it's process.",
+          "vaga": "I have minimum standards I need to see before approving. It's not bureaucracy, it's responsibility.",
+          "dramatica": "PR is stalled because I care about what goes to production. You should be thanking me."
+        },
+        "Test coverage dropped": {
+          "tecnica": "Coverage dropped because someone merged code without tests and the pipeline doesn't block on coverage threshold. Two process problems in one.",
+          "vaga": "Without automatic coverage enforcement, this will keep happening. We need a gate in CI.",
+          "dramatica": "Coverage dropped because it was allowed to drop. Not by accident. By rushing."
+        },
+        "Friday 5pm deploy": {
+          "tecnica": "Friday deploys are a documented anti-pattern. If it was urgent, something in the earlier process failed. The deploy is the symptom, not the cause.",
+          "vaga": "Risky-hour deploys are a consequence of process failures earlier on. We need to address the root cause.",
+          "dramatica": "Friday at 5pm. Again. Someone needs to write an ADR banning this before I do."
+        },
+        "Rollback failed too": {
+          "tecnica": "The rollback failed because the deploy had a schema migration without a corresponding rollback script. It's one of the practices I've advocated for years. Today's the day to understand why.",
+          "vaga": "Rollback without proper preparation doesn't work. We need rollback runbooks for every deploy.",
+          "dramatica": "A rollback plan made 5 minutes before the deploy isn't a plan. It's hope."
+        },
+        "Duplicate data in prod": {
+          "tecnica": "Idempotency in ingestion processes is not optional. This problem was predictable. The architecture didn't guarantee idempotency and everyone knew it.",
+          "vaga": "Processes without idempotency guarantees eventually cause duplication. It's a design issue that needs to be addressed.",
+          "dramatica": "The data duplicated because the system was built on faith instead of contracts. Faith doesn't scale."
+        },
+        "Someone deleted the database": {
+          "tecnica": "A production database without DROP protection is a risk that can be mitigated with soft deletes, restricted permissions, and environment confirmation. We have all these items still open.",
+          "vaga": "We need stricter access controls in production. This shouldn't have been possible.",
+          "dramatica": "The database was deleted. I wish I could say I'm surprised. I'm not."
+        }
+      },
+      "Auditor/Compliance": {
+        "Deployed to prod and broke something else": {
+          "tecnica": "The change went through the standard approval process. The side effect occurred in a module with an undocumented dependency. We're updating the dependency map and the change management process.",
+          "vaga": "The update generated an unforeseen impact. We're documenting the incident and reviewing our pre-deploy validation controls.",
+          "dramatica": "The system was changed following the process. The process revealed a gap. We're closing the gap."
+        },
+        "CI/CD failed": {
+          "tecnica": "The continuous delivery pipeline failure is documented and being addressed. There was no bypass of the validation process. No release was made without going through automated controls.",
+          "vaga": "Our delivery process has an instability being handled within established controls. No governance process was compromised.",
+          "dramatica": "The pipeline failed. That means the controls worked. Nothing got through without validation."
+        },
+        "Old bug came back": {
+          "tecnica": "The defect reintroduction was caused by an indirect change not tracked in the change management system. We're updating the process to ensure complete traceability of regressions.",
+          "vaga": "A previously fixed defect was reintroduced. We're reviewing our change management process to ensure greater control.",
+          "dramatica": "The defect is back. So is its record. We have evidence it was fixed before. Now we have evidence it returned. Full traceability."
+        },
+        "Estimate blew up": {
+          "tecnica": "The timeline overrun was caused by technical complexity identified during execution. The deviation was communicated as soon as identified. We're documenting to calibrate future estimation processes.",
+          "vaga": "There was a timeline deviation that was communicated to stakeholders. We're documenting the causes to improve our planning process.",
+          "dramatica": "The deadline was missed. It's documented. With root cause. With lessons learned. With action plan. Everything on record."
+        },
+        "Feature delayed": {
+          "tecnica": "The delivery is delayed due to technical dependencies identified during development. The delay was formally communicated and is documented in the project management system.",
+          "vaga": "We have a delivery delay that's being managed within established processes. Communication was made to relevant parties.",
+          "dramatica": "The delivery is late. The delay was recorded. The cause was documented. The process was followed."
+        },
+        "Environment went down": {
+          "tecnica": "The outage was logged with timestamp, identified cause, and documented recovery time. The RTO was met within the parameters of the current SLA. A postmortem will be prepared.",
+          "vaga": "We had an outage that's being documented per our incident management process. All communication steps were followed.",
+          "dramatica": "The environment went down. The incident was opened. The SLA was measured. Communication was sent. The process worked."
+        },
+        "PR stuck for days": {
+          "tecnica": "The code is undergoing review as required by our change control process. There's no bypass of the approval process. The change only advances after proper review.",
+          "vaga": "The change is going through the established review process. This control exists precisely to ensure quality and traceability.",
+          "dramatica": "The code is waiting for approval. That's the process working, not failing."
+        },
+        "Test coverage dropped": {
+          "tecnica": "The test coverage reduction has been identified and is being monitored. We have visibility over uncovered areas and a documented action plan for index recovery.",
+          "vaga": "There was a variation in our test coverage indicator. We're addressing it and documenting the action plan.",
+          "dramatica": "Coverage dropped. We have the exact number. We have the delta. We have the plan. We have the date. All documented."
+        },
+        "Friday 5pm deploy": {
+          "tecnica": "The deploy was performed at an unconventional time following the documented emergency change process. Approval was obtained per the change management flow for critical situations.",
+          "vaga": "The change was made outside standard hours following our emergency change process. All documentation has been generated.",
+          "dramatica": "Friday deploy with registered approval, documented justification, and active monitoring. The process was followed."
+        },
+        "Rollback failed too": {
+          "tecnica": "The rollback process encountered documented technical constraints. We're executing the alternative recovery procedure per the critical incidents runbook. All actions are being logged.",
+          "vaga": "The standard rollback process encountered limitations and we're executing the established alternative procedure. The full action trail is being documented.",
+          "dramatica": "Rollback failed. Documented. Plan B in progress. Documented. Every step of this crisis has a record."
+        },
+        "Duplicate data in prod": {
+          "tecnica": "The data duplication has been identified, cataloged, and is being corrected following the change management process for production data. No changes will be made without proper validation and approval.",
+          "vaga": "We identified a data inconsistency and are following our production data correction process. Full traceability is being maintained.",
+          "dramatica": "Duplicate data. Cataloged. Impact mapped. Correction process initiated with approval. Audit possible at every step."
+        },
+        "Someone deleted the database": {
+          "tecnica": "There was an unauthorized data deletion in production. The incident was logged immediately. The recovery process was initiated. We're preserving all evidence for forensic analysis and access control review.",
+          "vaga": "We're handling a critical data incident following our incident response plan. All communication and documentation is being generated per the process.",
+          "dramatica": "The worst scenario happened. The response process was activated. Everything is being documented. This will become a case study for control improvements."
+        }
+      }
+    }
+  }
+}

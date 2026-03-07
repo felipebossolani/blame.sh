@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>blame.sh — Developer Excuse Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0D1117;
+      --card: #161B22;
+      --border: #30363D;
+      --text: #E6EDF3;
+      --text-muted: #8B949E;
+      --green: #3FB950;
+      --blue: #58A6FF;
+      --red: #F85149;
+    }
+
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 960px;
+      width: 100%;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--green);
+    }
+
+    header h1 span {
+      color: var(--text-muted);
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
+
+    /* Language toggle */
+    .lang-toggle {
+      display: flex;
+      justify-content: center;
+      gap: 0.25rem;
+      margin-top: 1rem;
+    }
+
+    .lang-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.8rem;
+      padding: 0.3rem 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .lang-btn:first-child { border-radius: 4px 0 0 4px; }
+    .lang-btn:last-child { border-radius: 0 4px 4px 0; }
+
+    .lang-btn.active {
+      background: var(--green);
+      border-color: var(--green);
+      color: var(--bg);
+    }
+
+    /* Terminal prompt */
+    .terminal-prompt {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 2rem;
+      font-size: 0.85rem;
+      overflow-x: auto;
+    }
+
+    .terminal-prompt .prompt-symbol {
+      color: var(--green);
+    }
+
+    .terminal-prompt .cmd {
+      color: var(--text);
+    }
+
+    .terminal-prompt .flag {
+      color: var(--blue);
+    }
+
+    .terminal-prompt .value {
+      color: var(--red);
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1em;
+      background: var(--green);
+      vertical-align: text-bottom;
+      animation: blink 1s step-end infinite;
+      margin-left: 2px;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    /* Steps */
+    .step {
+      margin-bottom: 1.5rem;
+    }
+
+    .step-label {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+    }
+
+    .step-label span {
+      color: var(--green);
+    }
+
+    /* Chips */
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .chip {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.8rem;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .chip:hover {
+      border-color: var(--green);
+    }
+
+    .chip.selected {
+      border-color: var(--green);
+      background: rgba(63, 185, 80, 0.1);
+      color: var(--green);
+    }
+
+    /* Generate button */
+    .generate-wrap {
+      text-align: center;
+      margin: 2rem 0;
+    }
+
+    .generate-btn {
+      background: var(--green);
+      border: none;
+      color: var(--bg);
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 700;
+      padding: 0.75rem 2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .generate-btn:hover {
+      opacity: 0.85;
+    }
+
+    /* Results */
+    .results {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    @media (max-width: 640px) {
+      .results {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .result-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .result-card .tone-label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.75rem;
+      font-weight: 700;
+    }
+
+    .result-card.tecnica { border-top: 3px solid var(--green); }
+    .result-card.tecnica .tone-label { color: var(--green); }
+
+    .result-card.vaga { border-top: 3px solid var(--blue); }
+    .result-card.vaga .tone-label { color: var(--blue); }
+
+    .result-card.dramatica { border-top: 3px solid var(--red); }
+    .result-card.dramatica .tone-label { color: var(--red); }
+
+    .result-card .excuse-text {
+      font-size: 0.82rem;
+      line-height: 1.6;
+      flex: 1;
+      color: var(--text);
+    }
+
+    .result-card .copy-btn {
+      align-self: flex-end;
+      margin-top: 1rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.7rem;
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .result-card .copy-btn:hover {
+      border-color: var(--text-muted);
+      color: var(--text);
+    }
+
+    .result-card .copy-btn.copied {
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    /* Reset */
+    .reset-wrap {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .reset-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.8rem;
+      padding: 0.5rem 1.5rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .reset-btn:hover {
+      border-color: var(--text-muted);
+      color: var(--text);
+    }
+
+    /* Hidden */
+    .hidden { display: none !important; }
+
+    /* Footer */
+    footer {
+      margin-top: auto;
+      padding-top: 3rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.7rem;
+    }
+
+    footer a {
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: var(--text);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>blame<span>.sh</span></h1>
+      <p id="subtitle">Gerador de desculpas para devs</p>
+      <div class="lang-toggle">
+        <button class="lang-btn active" data-lang="pt">PT</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+    </header>
+
+    <div class="terminal-prompt">
+      <span class="prompt-symbol">$ </span>
+      <span class="cmd">blame</span>
+      <span id="prompt-args"></span>
+      <span class="cursor"></span>
+    </div>
+
+    <div class="step" id="step-persona">
+      <div class="step-label"><span>#1</span> <span id="label-persona">Quem vai ouvir?</span></div>
+      <div class="chips" id="persona-chips"></div>
+    </div>
+
+    <div class="step hidden" id="step-situation">
+      <div class="step-label"><span>#2</span> <span id="label-situation">O que aconteceu?</span></div>
+      <div class="chips" id="situation-chips"></div>
+    </div>
+
+    <div class="generate-wrap hidden" id="generate-wrap">
+      <button class="generate-btn" id="generate-btn">$ ./blame.sh</button>
+    </div>
+
+    <div class="results hidden" id="results"></div>
+
+    <div class="reset-wrap hidden" id="reset-wrap">
+      <button class="reset-btn" id="reset-btn">reset</button>
+    </div>
+  </div>
+
+  <footer>
+    <p>blame.sh &mdash; <span id="footer-text">porque a culpa nunca é do dev</span></p>
+  </footer>
+
+  <script>
+    const i18n = {
+      pt: {
+        subtitle: 'Gerador de desculpas para devs',
+        labelPersona: 'Quem vai ouvir?',
+        labelSituation: 'O que aconteceu?',
+        generate: '$ ./blame.sh',
+        reset: 'reset',
+        copy: 'copiar',
+        copied: 'copiado!',
+        footer: 'porque a culpa nunca é do dev',
+        tones: { tecnica: 'Técnica', vaga: 'Vaga', dramatica: 'Dramática' }
+      },
+      en: {
+        subtitle: 'Developer excuse generator',
+        labelPersona: 'Who\'s listening?',
+        labelSituation: 'What happened?',
+        generate: '$ ./blame.sh',
+        reset: 'reset',
+        copy: 'copy',
+        copied: 'copied!',
+        footer: 'because it\'s never the dev\'s fault',
+        tones: { tecnica: 'Technical', vaga: 'Vague', dramatica: 'Dramatic' }
+      }
+    };
+
+    let data = null;
+    let state = { lang: 'pt', persona: null, situation: null };
+
+    async function init() {
+      const res = await fetch('excuses.json');
+      data = await res.json();
+      renderPersonas();
+      bindEvents();
+    }
+
+    function bindEvents() {
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.lang = btn.dataset.lang;
+          state.persona = null;
+          state.situation = null;
+          document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          document.documentElement.lang = state.lang === 'pt' ? 'pt-BR' : 'en';
+          updateLabels();
+          renderPersonas();
+          hideElement('step-situation');
+          hideElement('generate-wrap');
+          hideElement('results');
+          hideElement('reset-wrap');
+          updatePrompt();
+        });
+      });
+
+      document.getElementById('generate-btn').addEventListener('click', generate);
+      document.getElementById('reset-btn').addEventListener('click', reset);
+    }
+
+    function updateLabels() {
+      const t = i18n[state.lang];
+      document.getElementById('subtitle').textContent = t.subtitle;
+      document.getElementById('label-persona').textContent = t.labelPersona;
+      document.getElementById('label-situation').textContent = t.labelSituation;
+      document.getElementById('generate-btn').textContent = t.generate;
+      document.getElementById('reset-btn').textContent = t.reset;
+      document.getElementById('footer-text').textContent = t.footer;
+    }
+
+    function renderPersonas() {
+      const container = document.getElementById('persona-chips');
+      const personas = Object.keys(data.excuses[state.lang]);
+      container.innerHTML = '';
+      personas.forEach(p => {
+        const btn = document.createElement('button');
+        btn.className = 'chip';
+        btn.textContent = p;
+        btn.addEventListener('click', () => selectPersona(p));
+        container.appendChild(btn);
+      });
+    }
+
+    function selectPersona(persona) {
+      state.persona = persona;
+      state.situation = null;
+      document.querySelectorAll('#persona-chips .chip').forEach(c => {
+        c.classList.toggle('selected', c.textContent === persona);
+      });
+      renderSituations();
+      showElement('step-situation');
+      hideElement('generate-wrap');
+      hideElement('results');
+      hideElement('reset-wrap');
+      updatePrompt();
+    }
+
+    function renderSituations() {
+      const container = document.getElementById('situation-chips');
+      const situations = Object.keys(data.excuses[state.lang][state.persona]);
+      container.innerHTML = '';
+      situations.forEach(s => {
+        const btn = document.createElement('button');
+        btn.className = 'chip';
+        btn.textContent = s;
+        btn.addEventListener('click', () => selectSituation(s));
+        container.appendChild(btn);
+      });
+    }
+
+    function selectSituation(situation) {
+      state.situation = situation;
+      document.querySelectorAll('#situation-chips .chip').forEach(c => {
+        c.classList.toggle('selected', c.textContent === situation);
+      });
+      showElement('generate-wrap');
+      hideElement('results');
+      hideElement('reset-wrap');
+      updatePrompt();
+    }
+
+    function updatePrompt() {
+      const args = document.getElementById('prompt-args');
+      let text = '';
+      if (state.persona) {
+        text += ` <span class="flag">--who=</span><span class="value">"${state.persona}"</span>`;
+      }
+      if (state.situation) {
+        text += ` <span class="flag">--incident=</span><span class="value">"${state.situation}"</span>`;
+      }
+      args.innerHTML = text;
+    }
+
+    function generate() {
+      const excuses = data.excuses[state.lang][state.persona][state.situation];
+      const container = document.getElementById('results');
+      const t = i18n[state.lang];
+      container.innerHTML = '';
+
+      ['tecnica', 'vaga', 'dramatica'].forEach(tone => {
+        const card = document.createElement('div');
+        card.className = `result-card ${tone}`;
+        card.innerHTML = `
+          <div class="tone-label">${t.tones[tone]}</div>
+          <div class="excuse-text"></div>
+          <button class="copy-btn">${t.copy}</button>
+        `;
+        container.appendChild(card);
+
+        const textEl = card.querySelector('.excuse-text');
+        typewriter(textEl, excuses[tone]);
+
+        card.querySelector('.copy-btn').addEventListener('click', function() {
+          navigator.clipboard.writeText(excuses[tone]);
+          this.textContent = t.copied;
+          this.classList.add('copied');
+          setTimeout(() => {
+            this.textContent = t.copy;
+            this.classList.remove('copied');
+          }, 1500);
+        });
+      });
+
+      showElement('results');
+      showElement('reset-wrap');
+    }
+
+    function typewriter(el, text) {
+      el.textContent = '';
+      let i = 0;
+      const interval = setInterval(() => {
+        el.textContent += text[i];
+        i++;
+        if (i >= text.length) clearInterval(interval);
+      }, 30);
+    }
+
+    function reset() {
+      state.persona = null;
+      state.situation = null;
+      document.querySelectorAll('#persona-chips .chip').forEach(c => c.classList.remove('selected'));
+      hideElement('step-situation');
+      hideElement('generate-wrap');
+      hideElement('results');
+      hideElement('reset-wrap');
+      updatePrompt();
+    }
+
+    function showElement(id) { document.getElementById(id).classList.remove('hidden'); }
+    function hideElement(id) { document.getElementById(id).classList.add('hidden'); }
+
+    init();
+  </script>
+</body>
+</html>
