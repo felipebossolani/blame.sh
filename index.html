@@ -347,6 +347,25 @@
       color: var(--text);
     }
 
+    /* Collapsed step */
+    .step.collapsed .step-label {
+      display: inline;
+      margin-bottom: 0;
+      margin-right: 0.5rem;
+    }
+
+    .step.collapsed .chips {
+      display: inline;
+    }
+
+    .step.collapsed .chip:not(.selected) {
+      display: none;
+    }
+
+    .step.collapsed .chip.selected {
+      cursor: pointer;
+    }
+
     /* Hidden */
     .hidden { display: none !important; }
 
@@ -457,6 +476,7 @@
           document.documentElement.lang = state.lang === 'pt' ? 'pt-BR' : 'en';
           updateLabels();
           renderPersonas();
+          document.getElementById('step-persona').classList.remove('collapsed');
           hideElement('step-situation');
           hideElement('generate-btn');
           hideElement('results');
@@ -492,11 +512,17 @@
     }
 
     function selectPersona(persona) {
+      if (state.persona === persona) {
+        document.getElementById('step-persona').classList.remove('collapsed');
+        return;
+      }
       state.persona = persona;
       state.situation = null;
       document.querySelectorAll('#persona-chips .chip').forEach(c => {
         c.classList.toggle('selected', c.textContent === persona);
       });
+      document.getElementById('step-persona').classList.add('collapsed');
+      document.getElementById('step-situation').classList.remove('collapsed');
       renderSituations();
       showElement('step-situation');
       hideElement('generate-btn');
@@ -519,10 +545,15 @@
     }
 
     function selectSituation(situation) {
+      if (state.situation === situation) {
+        document.getElementById('step-situation').classList.remove('collapsed');
+        return;
+      }
       state.situation = situation;
       document.querySelectorAll('#situation-chips .chip').forEach(c => {
         c.classList.toggle('selected', c.textContent === situation);
       });
+      document.getElementById('step-situation').classList.add('collapsed');
       showElement('generate-btn');
       hideElement('results');
       hideElement('reset-wrap');
@@ -603,6 +634,8 @@
       state.persona = null;
       state.situation = null;
       document.querySelectorAll('#persona-chips .chip').forEach(c => c.classList.remove('selected'));
+      document.getElementById('step-persona').classList.remove('collapsed');
+      document.getElementById('step-situation').classList.remove('collapsed');
       hideElement('step-situation');
       hideElement('generate-btn');
       hideElement('results');
