@@ -114,13 +114,19 @@
 
     /* Terminal prompt */
     .terminal-prompt {
+      position: sticky;
+      top: 0;
+      z-index: 100;
       background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1rem 1.25rem;
-      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      padding: 0.75rem 1rem;
       font-size: 0.85rem;
       overflow-x: auto;
+    }
+
+    .terminal-prompt-inner {
+      max-width: 960px;
+      margin: 0 auto;
     }
 
     .terminal-prompt .prompt-symbol {
@@ -151,6 +157,10 @@
 
     @keyframes blink {
       50% { opacity: 0; }
+    }
+
+    .terminal-prompt + .container {
+      padding-top: 1.5rem;
     }
 
     /* Steps */
@@ -348,14 +358,18 @@
         <button class="lang-btn" data-lang="en">EN</button>
       </div>
     </header>
+  </div>
 
-    <div class="terminal-prompt">
+  <div class="terminal-prompt">
+    <div class="terminal-prompt-inner">
       <span class="prompt-symbol">$ </span>
       <span class="cmd">blame</span>
       <span id="prompt-args"></span>
       <span class="cursor"></span>
     </div>
+  </div>
 
+  <div class="container">
     <div class="step" id="step-persona">
       <div class="step-label"><span>#1</span> <span id="label-persona">Quem vai ouvir?</span></div>
       <div class="chips" id="persona-chips"></div>
