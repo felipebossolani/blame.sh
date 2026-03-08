@@ -30,6 +30,10 @@ Vanilla HTML, CSS, and JavaScript. A single page, zero external dependencies (be
 
 Open the `index.html` file in your browser. No build, bundler, or server required.
 
+## Prompts
+
+The [`blame-sh-prompts.md`](blame-sh-prompts.md) file contains all the prompts used to build this project, both in [Claude Code](https://docs.anthropic.com/en/docs/claude-code) and [Gemini](https://gemini.google.com/).
+
 ## Author
 
 Built by [Felipe Bossolani](https://github.com/felipebossolani).
